@@ -1,0 +1,47 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "SEO Techniques using C#";
+}
+
+<h1 class="mb-5">Keyword Density</h1>
+<form method="post" class="mt-5">
+    <div class="mb-3">
+        <label asp-for="TextToAnalyze" class="form-label">Text to analyze</label>
+        <textarea asp-for="TextToAnalyze" class="form-control" rows="10"></textarea>
+    </div>
+
+    @if (Model.KeywordResults is { } pairs)
+    {
+        <p>Word count: @Model.WordCount</p>
+        <ul>
+            @foreach (var item in pairs)
+            {
+                var gauge = ((float)item.Value / Model.WordCount) * 100;
+                switch (gauge)
+                {
+                    case > 10:
+                        <li class="text-danger">@item.Key - @item.Value times (@($"{gauge:N1}%"))</li>
+                        break;
+                    case >= 3:
+                        <li class="text-warning">@item.Key - @item.Value times (@($"{gauge:N1}%"))</li>
+                        break;
+                    case >= 1:
+                        <li class="text-success">@item.Key - @item.Value times (@($"{gauge:N1}%"))</li>
+                        break;
+                    case >= 0:
+                        <li class="text-warning">@item.Key - @item.Value times (@($"{gauge:N1}%"))</li>
+                        break;
+                    default:
+                        <li>@item.Key - @item.Value times (@($"{gauge:N1}%"))</li>
+                        break;
+                }
+            }
+        </ul>
+    }
+
+    <hr/>
+    
+    <button class="btn btn-success">Analyze</button>
+
+</form>
